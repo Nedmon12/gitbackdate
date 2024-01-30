@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
+#include <random>
 #include <string>
 
 // do I need to define a struct?
@@ -108,19 +109,35 @@
 // }
 
 int main(int argc, char *argv[]) {
+    std::string timer = "14:30:12";
     std::int32_t commits = 999;
     auto time_now = std::chrono::system_clock::now();
     int yearsecs = 31556926;
     auto today = date::year_month_day{
         date::floor<date::days>(std::chrono::system_clock::now())};
     auto last_year = today - date::years{1};
+    today = today - date::years{1};
     std::cout << "Last year was exactly on this date : " << last_year
               << std::endl;
-    while (last_year < today) {
-        // make your commits here
-        last_year = last_year + date::months(1);
-        std::cout << "daily increment ?" << last_year << std::endl;
+    date::year year = last_year.year();
+    date::month month = last_year.month();
+    date::day day = last_year.day();
+
+    std::cout << " Year : " << year << std::endl;
+    std::cout << "Month : " << month << std::endl;
+    std::cout << "Day : " << day - date::days{1} << std::endl;
+    while (true) {
+        day = day + date::days{1};
+        std::cout << "Incrementing dates : "
+                  << date::year_month_day{month / day / year} << std::endl;
     }
+
+    // while (last_year < today) {
+    // make your commits here
+    // last_year = last_year + date::months{1};
+    // auto year = today.year();
+    // std::cout << "daily increment ? " <<  << std::endl;
+    // }
     // std::cout << "The timestamp right now is : " << time_now
     // << std::endl;
 }
