@@ -3,8 +3,11 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
+#include <ctime>
+#include <iomanip>
 #include <iostream>
 #include <random>
+#include <sstream>
 #include <string>
 
 // do I need to define a struct?
@@ -109,35 +112,32 @@
 // }
 
 int main(int argc, char *argv[]) {
-    std::string timer = "14:30:12";
-    std::int32_t commits = 999;
-    auto time_now = std::chrono::system_clock::now();
-    int yearsecs = 31556926;
-    auto today = date::year_month_day{
-        date::floor<date::days>(std::chrono::system_clock::now())};
-    auto last_year = today - date::years{1};
-    today = today - date::years{1};
-    std::cout << "Last year was exactly on this date : " << last_year
-              << std::endl;
-    date::year year = last_year.year();
-    date::month month = last_year.month();
-    date::day day = last_year.day();
+    std::chrono::system_clock::time_point this_moment =
+        std::chrono::system_clock::now();
+    std::chrono::seconds secondsEpoch =
+        std::chrono::duration_cast<std::chrono::seconds>(
+            this_moment.time_since_epoch());
 
-    std::cout << " Year : " << year << std::endl;
-    std::cout << "Month : " << month << std::endl;
-    std::cout << "Day : " << day - date::days{1} << std::endl;
-    while (true) {
-        day = day + date::days{1};
-        std::cout << "Incrementing dates : "
-                  << date::year_month_day{month / day / year} << std::endl;
-    }
+    std::time_t unixTime = secondsEpoch.count();
 
-    // while (last_year < today) {
-    // make your commits here
-    // last_year = last_year + date::months{1};
-    // auto year = today.year();
-    // std::cout << "daily increment ? " <<  << std::endl;
+    std::time_t lastYear = unixTime - 31556926;
+
+    char *commitMessage;
+    std::chrono::system_clock::time_point tp =
+        std::chrono::system_clock::from_time_t(lastYear);
+    std::tm timeInfo = *std::localtime(&unixTime);
+    std::stringstream ss;
+    ss << std::put_time(&timeInfo, "%Y-%m-%d %H:%M:%S");
+    std::string formattedTimeString = ss.str();
+    std::cout << "The final string looks like" << std::endl
+              << formattedTimeString;
+    // sprintf(commitMessage, "git commit --amend --no-edit
+    // --date=%s",formattedTimeString);
+
+    // std::chrono::system_clock::time_point tp =
+    // std::chrono::system_clock::from_time_t(lastYear); while (unixTime >
+    // lastYear) {
+    //     lastYear = lastYear + 86400;
+    //
     // }
-    // std::cout << "The timestamp right now is : " << time_now
-    // << std::endl;
 }
