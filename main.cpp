@@ -125,12 +125,19 @@ int main(int argc, char *argv[]) {
     char *commitMessage;
     std::chrono::system_clock::time_point tp =
         std::chrono::system_clock::from_time_t(lastYear);
-    std::tm timeInfo = *std::localtime(&unixTime);
+    std::tm timeInfo = *std::localtime(&lastYear);
     std::stringstream ss;
-    ss << std::put_time(&timeInfo, "%Y-%m-%d %H:%M:%S");
+    ss << std::put_time(&timeInfo, "%Y-%m-%d %H:%M:%S\'");
     std::string formattedTimeString = ss.str();
-    std::cout << "The final string looks like" << std::endl
-              << formattedTimeString;
+    std::string commitAmmend = "git commit --amend --no-edit --date=\'";
+    commitAmmend = commitAmmend + formattedTimeString;
+    std::cout << " === : " << commitAmmend << std::endl;
+    int32_t result = system(commitAmmend.c_str());
+    if (result > 0) {
+        std::cout << "Command executed successfully" << std::endl;
+    } else {
+        std::cout << "Erroryans" << std::endl;
+    }
     // sprintf(commitMessage, "git commit --amend --no-edit
     // --date=%s",formattedTimeString);
 
