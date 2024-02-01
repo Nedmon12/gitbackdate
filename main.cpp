@@ -30,9 +30,15 @@ void append_to_file(std::string filepath, std::string to_append) {
 int32_t add_commit(std::string filepath, std::string message) {
     // git add .file
     // git commit -m "message"
+    std::string addcmd = "git add ";
+    addcmd = addcmd + filepath;
+    int32_t result = system(addcmd.c_str());
     std::string commit = "git commit -m \'";
     std::string suffix = message + "\'";
     commit = commit + suffix;
+
+    std::cout << commit << std::endl;
+
     return system(commit.c_str());
 }
 
@@ -43,7 +49,9 @@ int32_t alter_authorDate(std::tm &timeInfo) {
     std::string formattedTimeString = ss.str();
     std::string commitAmmend = "git commit --amend --no-edit --date=\'";
     commitAmmend = commitAmmend + formattedTimeString;
+
     std::cout << " === : " << commitAmmend << std::endl;
+
     return system(commitAmmend.c_str());
 }
 int32_t alter_commiterDate(std::tm &timeInfo) {
@@ -52,7 +60,10 @@ int32_t alter_commiterDate(std::tm &timeInfo) {
     std::string formattedTimeString = ss.str();
     std::string commitAmmend = "GIT_COMMITTER_DATE=\'";
     commitAmmend =
-        commitAmmend + formattedTimeString + "git commit --amend --no-edit";
+        commitAmmend + formattedTimeString + " git commit --amend --no-edit";
+
+    std::cout << commitAmmend << std::endl;
+
     return system(commitAmmend.c_str());
 }
 void modifyFile(std::string filepath, std::string appendthis) {
@@ -87,9 +98,9 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < commit_no; i++) {
         std::tm timeInfo = *std::localtime(&lastYear);
-
-        std::int32_t result =
-            add_commit("../gdbtest/README.md", "not even randomize");
+        std::string filepath = "./README.md";
+        modifyFile(filepath, "anita max wynn");
+        std::int32_t result = add_commit("./README.md", "not even randomized");
         if (result < 0) {
             std::cout << "Commit failed " << std::endl;
             break;
