@@ -80,6 +80,8 @@ void modifyFile(std::string filepath, std::string appendthis) {
 
 int main(int argc, char *argv[]) {
     // TODO parse integral from argv
+    // cpr::Response r = cpr::Get(cpr::Url{"https::/api"})
+    srand((unsigned)time(NULL));
     std::chrono::system_clock::time_point this_moment =
         std::chrono::system_clock::now();
     std::chrono::seconds secondsEpoch =
@@ -112,7 +114,12 @@ int main(int argc, char *argv[]) {
             break;
         }
         result = alter_commiterDate(timeInfo);
-        lastYear = lastYear + 28880;
+        int random = rand() % 5;
+        int increment = 28880;
+        if (random > 0) {
+            increment = 84600 / random;
+        }
+        lastYear = lastYear + increment;
     }
 
     char *commitMessage;
