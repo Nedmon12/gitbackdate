@@ -81,6 +81,7 @@ void modifyFile(std::string filepath, std::string appendthis) {
 int main(int argc, char *argv[]) {
     // TODO parse integral from argv
     // cpr::Response r = cpr::Get(cpr::Url{"https::/api"})
+    int commitPull[] = {1, 1, 2, 3, 4, 5, 1, 7, 8, 1, 10, 8, 11};
     srand((unsigned)time(NULL));
     std::chrono::system_clock::time_point this_moment =
         std::chrono::system_clock::now();
@@ -91,17 +92,17 @@ int main(int argc, char *argv[]) {
 
     std::time_t unixTime = secondsEpoch.count();
 
-    std::time_t lastYear = unixTime - 31556926;
+    std::time_t lastYear = unixTime - 111556926;
 
     std::chrono::system_clock::time_point tp =
         std::chrono::system_clock::from_time_t(lastYear);
     // std::tm timeInfo = *std::localtime(&lastYear);
-    int32_t commit_no = 999;
+    int32_t commit_no = 2100;
 
     for (int i = 0; i < commit_no; i++) {
         std::tm timeInfo = *std::localtime(&lastYear);
         std::string filepath = "./README.md";
-        modifyFile(filepath, "anita max wynn");
+        modifyFile(filepath, "anita max wynn \t");
         std::int32_t result = add_commit("./README.md", "not even randomized");
         if (result < 0) {
             std::cout << "Commit failed " << std::endl;
@@ -114,11 +115,8 @@ int main(int argc, char *argv[]) {
             break;
         }
         result = alter_commiterDate(timeInfo);
-        int random = rand() % 5;
-        int increment = 28880;
-        if (random > 0) {
-            increment = 84600 / random;
-        }
+        int random = commitPull[rand() % 11];
+        int increment = 104600 / random;
         lastYear = lastYear + increment;
     }
 
